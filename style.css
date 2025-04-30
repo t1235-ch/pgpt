@@ -1,1119 +1,861 @@
-<!DOCTYPE html>
-<html lang="en-US"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-   
+/*! normalize.css v3.0.2 | MIT License | git.io/normalize */
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700");
 
-<!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>Parallel GPT: Harmonizing the Independence and Interdependence of Acoustic and Semantic Information for Zero-Shot Text-to-Speech</title>
-<meta name="generator" content="Jekyll v3.9.0">
-<meta property="og:title" content="Parallel GPT: Harmonizing the Independence and Interdependence of Acoustic and Semantic Information for Zero-Shot Text-to-Speech">
-<meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary">
-<!-- End Jekyll SEO tag -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#157878">
-    <link rel="stylesheet" href="./style.css">
-  </head>
-  <body data-new-gr-c-s-check-loaded="14.1023.0" data-gr-ext-installed="">
-    <section class="page-header">
-    <!-- <h1 class="project-name"></h1>
-    <h2 class="project-tagline"></h2> -->
-      
-      
-    </section>
+html {
+    font-family: sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%
+}
 
-    <section class="main-content">
-      <h1 id=""><center>Parallel GPT: Harmonizing the Independence and Interdependence of Acoustic and Semantic Information for Zero-Shot Text-to-Speech</center></h1>
-      <!-- <h1 id=""><center> Evaluation </center></h1> -->
-      
+body {
+    margin: 0
+}
 
-<!-- <center> <b>| Anonymous | </b> </center> -->
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+    display: block
+}
 
+audio,
+canvas,
+progress,
+video {
+    display: inline-block;
+    vertical-align: baseline
+}
 
+audio:not([controls]) {
+    display: none;
+    height: 0
+}
 
-<h2 id="abstract">Abstract</h2>
-<p>
-Advances in speech representation and large language models have enhanced zero-shot text-to-speech (TTS) performance. However, existing zero-shot TTS models face challenges in capturing the complex correlations between acoustic and semantic features, resulting in a lack of expressiveness and similarity. The primary reason lies in the complex relationship between semantic and acoustic features, which manifests independent and interdependent aspects. This paper introduces a TTS framework that combines both autoregressive (AR) and non-autoregressive (NAR) modules to harmonize the independence and interdependence of acoustic and semantic information. The AR model leverages the proposed Parallel Tokenizer to synthesize the top semantic and acoustic tokens simultaneously. In contrast, the Coupled NAR model predicts detailed tokens based on the AR output, considering the interdependence between semantic and acoustic aspects. Parallel GPT, built on this architecture, is designed to improve zero-shot text-to-speech synthesis through its parallel structure.
-Experiments on English and Chinese datasets demonstrate that the proposed model significantly outperforms the quality and efficiency of the synthesis of existing zero-shot TTS models.
-</p>
+[hidden],
+template {
+    display: none
+}
 
-<h2><p class="toc_title">Contents</p></h2>
-<div id="toc_container">
-<ul>
-  <li><a href="#1">Model Architecture</a></li>
-  <li><a href="#2">Experiments on English Dataset</a></li>
-  <li><a href="#3">Experiments on Chinese Dataset</a></li>
-</ul>
-</div>
+a {
+    background-color: transparent
+}
 
-<a name="1"><h2>Model Architecture</h2></a>
-<div>
-  <br />
-  <p style="text-align: center">
-    <img src="parallel-gpt_3_00.jpg"/>
-  </p>
-  <p>
-  <figcaption style="text-align:center;">
-    </font>
-    <font size=3>
- Figure 1: An overview of the Parallel GPT inference pipeline. (1) The Parallel Tokenizer Encoder derives tokens from reference speech. (2) The Parallel Autoregressive Language Model generates the top semantic and acoustic tokens based on the condition of text and speech. (3)
-The Coupled Non-Autoregressive Transformer model generates the semantic and acoustic tokens of the last two bits. These outputs, combined with the top parallel tokens, form the comprehensive parallel tokens. (4) The Parallel Tokenizer Decoder generates higher-quality speech from generated comprehensive parallel tokens.</font>
-  </figcaption><br><br>
-  </p>
+a:active,
+a:hover {
+    outline: 0
+}
 
-  <br />
-  <p style="text-align: center">
-    <img src="parallel-gpt_2_00.jpg" />
-  </p>
-  <p>
-  <figcaption style="text-align:center;">
-    </font>
-    <font size=3>
-      Figure 2: The structure of Parallel Tokenizer. It is trained before training the TTS model. Wav2vec 2.0, BEATS, and Campplus models use downloaded pre-training weights and freeze the parameters during training.
-    </font>
-  </figcaption><br><br>
-  </p>
-    <br />
-  <p style="text-align: center">
-    <img src="parallel-gpt_4_00.jpg" />
-  </p>
-  <p>
-  <figcaption style="text-align:center;">
-    </font>
-    <font size=3>
-      Figure 3: The structure of the Parallel Autoregressive Language Model. It is designed to synthesize target top tokens from the target text and reference speech. We define the first dimension of the tokens obtained by the Parallel Tokenizer as the "top tokens," representing the most important elements.
-    </font>
-  </figcaption><br><br>
-  </p>
+abbr[title] {
+    border-bottom: 1px dotted
+}
 
-        <br />
-  <p style="text-align: center">
-    <img src="parallel-gpt_5_00.jpg" style="width: 60%; max-width: 600px; />
-  </p>
-  <p>
-  <figcaption style="text-align:center;">
-      <br>
-    </font>
-    <font size=3>
-      Figure 4: The structure of Coupled Non-Autoregressive Transformer. It is designed to generate detailed tokens from target top tokens and reference speech.
-    </font>
-  </figcaption><br><br>
-  </p>
-</div>
-<a name="2"><h2>Experiments on English Dataset</h2></a>
-<p>
-  <li>The audio sample below is a sample synthesized using the model proposed in this paper.</li>
-  <li>The LibriTTS dataset is used, you can download it via https://www.openslr.org/60/.</li>
-  <li>LibriTTS is a multi-speaker English corpus. It amounts to 585 hours and over 2300 speakers. Train-clean-100, train-clean-360, and train-other-500 are merged as the training set. Dev-clean and dev-other are merged as a development set. Test-clean and test-other are merged as the test set. </li>
-            <li>Each comparison experiment model sources are listed below:</li>
-                <ul>
-                    <li><b>YourTTS</b>: https://github.com/Edresson/YourTTS</li>
-                            <li><b>MaskGCT</b>: https://github.com/open-mmlab/Amphion/tree/main/models/tts/maskgct</li>
-                    <li><b>VALL-E</b>: https://github.com/lifeiteng/VALL-E</li>
-                     <li><b>TransferTTS</b>: https://github.com/hcy71o/TransferTTS</li>
-                    <li><b>CosyVoice</b>: https://github.com/FunAudioLLM/CosyVoice</li>
-                     <li><b>E2TTS</b>: https://github.com/lucidrains/e2-tts-pytorch</li>
-                          <li><b>UniAudio</b>: https://github.com/yangdongchao/UniAudio</li>
-          </ul>
-<li>In this section, we conduct detailed ablation experiments:</li>
-        <ul>
-            <li><b>-only Wav2Vec 2.0</b>: Uses only Wav2Vec 2.0 tokens for semantic representation</li>
-            <li><b>-only BEATs</b>: Uses only BEATs tokens for acoustic representation</li>
-        </ul>
+b,
+strong {
+    font-weight: bold
+}
 
-        <ul>
-            <li><b>-w/o parallel</b>: Merges semantics and acoustics for RVQ encoding, converting to traditional AR framework</li>
-        </ul>
+dfn {
+    font-style: italic
+}
 
-        <ul>
-            <li><b>-only AR</b>: Uses AR model exclusively to predict all RVQ tokens (3 semantic + 3 acoustic) through multiple heads</li>
-        </ul>
-        <li>The first 2 to 3 seconds of the ground truth speech are extracted as reference speech, with the precise duration determined by the Voice Activity Detection (VAD) cutoff point. Care is taken to ensure that the extracted segment ends at the completion of a full word pronunciation.</li>
-                </ul>
-<h3>Sample for Seen Speaker - Development Set</h3>
-<h4>Sample 1</h4>
-<p>Text: And then he talked of her mother, and he made her pray</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-dev/174_168635_000040_000001/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-dev/174_168635_000040_000001/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-dev/174_168635_000040_000001/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/174_168635_000040_000001/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/174_168635_000040_000001/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/174_168635_000040_000001/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/174_168635_000040_000001/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/174_168635_000040_000001/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/174_168635_000040_000001/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/174_168635_000040_000001/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/174_168635_000040_000001/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/174_168635_000040_000001/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/174_168635_000040_000001/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 2</h4>
-<p>Text: He had stolen out during the half hour allowed at the works for tea, to buy them an orange or two, which now puffed out his jacket pocket</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0
+}
 
-<br><h4>Sample 3</h4>
-<p>Text: "Tom, we're having a problem with the gyro stabilizer," said Mark Faber, gray haired president of the Faber Electronics Company</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
+mark {
+    background: #ff0;
+    color: #000
+}
 
-<br><h4>Sample 4</h4>
-<p>Text: And Mr Ossipon brings every week a pile of these f p tracts to sell at a halfpenny each</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 5</h4>
-<p>Text: This alternative in the Captain's plans (terminating the voyage a month earlier than his arrangements had contemplated) puzzled Randal</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-dev/8297_275154_000003_000003/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-dev/8297_275154_000003_000003/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-dev/8297_275154_000003_000003/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/8297_275154_000003_000003/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/8297_275154_000003_000003/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/8297_275154_000003_000003/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/8297_275154_000003_000003/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/8297_275154_000003_000003/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/8297_275154_000003_000003/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/8297_275154_000003_000003/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/8297_275154_000003_000003/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/8297_275154_000003_000003/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/8297_275154_000003_000003/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br>
+small {
+    font-size: 80%
+}
 
-<br>
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline
+}
 
-<br>
-      <h3>Sample for Unseen Speaker - Test Set</h3>
+sup {
+    top: -0.5em
+}
 
-<h4>Sample 1</h4>
-<p>Text: So choose for yourself-to make a rush or tarry here. "So choose for yourself-to make a rush or tarry here. "</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-test/1320_122617_000055_000003/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-test/1320_122617_000055_000003/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-test/1320_122617_000055_000003/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/1320_122617_000055_000003/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/1320_122617_000055_000003/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/1320_122617_000055_000003/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/1320_122617_000055_000003/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/1320_122617_000055_000003/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/1320_122617_000055_000003/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/1320_122617_000055_000003/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/1320_122617_000055_000003/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/1320_122617_000055_000003/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/1320_122617_000055_000003/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 2</h4>
-<p>Text: They met a good many acquaintances; Mainhall, indeed, knew almost every one, and he babbled on incontinently, screwing his small head about over his high collar</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-test/4446_2271_000009_000001/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-test/4446_2271_000009_000001/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-test/4446_2271_000009_000001/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/4446_2271_000009_000001/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/4446_2271_000009_000001/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/4446_2271_000009_000001/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/4446_2271_000009_000001/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/4446_2271_000009_000001/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/4446_2271_000009_000001/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/4446_2271_000009_000001/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/4446_2271_000009_000001/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/4446_2271_000009_000001/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/4446_2271_000009_000001/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 3</h4>
-<p>Text: "Nothing whatever," replied the courtier, as pale as death; "but your majesty has not thought of Fruits. ""Nothing whatever," replied the courtier, as pale as death; "but your majesty has not thought of Fruits. "</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-test/7127_75946_000043_000000/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-test/7127_75946_000043_000000/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-test/7127_75946_000043_000000/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7127_75946_000043_000000/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7127_75946_000043_000000/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7127_75946_000043_000000/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7127_75946_000043_000000/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7127_75946_000043_000000/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7127_75946_000043_000000/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7127_75946_000043_000000/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7127_75946_000043_000000/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7127_75946_000043_000000/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7127_75946_000043_000000/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 4</h4>
-<p>Text: The Missouri cabal, on the other hand, having three of their best men constantly at the Governor's side, were compelled to recognize their lack of justification</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-test/7729_102255_000018_000008/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-test/7729_102255_000018_000008/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-test/7729_102255_000018_000008/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7729_102255_000018_000008/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7729_102255_000018_000008/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7729_102255_000018_000008/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7729_102255_000018_000008/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7729_102255_000018_000008/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7729_102255_000018_000008/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7729_102255_000018_000008/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7729_102255_000018_000008/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7729_102255_000018_000008/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/7729_102255_000018_000008/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 5</h4>
-<p>Text: Yet were they little worse than what were insisted on before the battle of Naseby</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
+sub {
+    bottom: -0.25em
+}
 
-<br><h4>Sample 6</h4>
-<p>Text: A ring of amethyst I could not wear here, plainer to my sight, Than that first kiss</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-test/908_31957_000017_000001/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-test/908_31957_000017_000001/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-test/908_31957_000017_000001/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/908_31957_000017_000001/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/908_31957_000017_000001/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/908_31957_000017_000001/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/908_31957_000017_000001/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/908_31957_000017_000001/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/908_31957_000017_000001/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/908_31957_000017_000001/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/908_31957_000017_000001/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/908_31957_000017_000001/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/908_31957_000017_000001/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br>
-<br>
+img {
+    border: 0
+}
 
-<br>
+svg:not(:root) {
+    overflow: hidden
+}
 
+figure {
+    margin: 1em 40px
+}
 
-      <a name="3"><h2>Experiments on Chinese Dataset</h2></a>
-<p>
- <li>The audio sample below is a sample synthesized using the model proposed in this paper.</li>
-  <li>An internal Chinese dataset is used. It consists of read speech from Chinese novels.</li>
-  <li> The dataset includes 453,716 audio samples, totaling 1,062 hours of speech recorded by 43,034 unique speakers. Two speech cleaning tools, Emilia pipeline and NCSSD pipeline, are applied for preprocessing and noise reduction to ensure high-quality data. </li>
-            <li>Each comparison experiment model sources are listed below:</li>
-                <ul>
-                            <li><b>MaskGCT</b>: https://github.com/open-mmlab/Amphion/tree/main/models/tts/maskgct</li>
-                    <li><b>CosyVoice</b>: https://github.com/FunAudioLLM/CosyVoice</li>
-                     <li><b>E2TTS</b>: https://github.com/lucidrains/e2-tts-pytorch</li>
-          </ul>
-<li>In this section, we conduct detailed ablation experiments:</li>
-        <ul>
-            <li><b>-only Wav2Vec 2.0</b>: Uses only Wav2Vec 2.0 tokens for semantic representation</li>
-            <li><b>-only BEATs</b>: Uses only BEATs tokens for acoustic representation</li>
-        </ul>
+hr {
+    box-sizing: content-box;
+    height: 0
+}
 
-        <ul>
-            <li><b>-w/o parallel</b>: Merges semantics and acoustics for RVQ encoding, converting to traditional AR framework</li>
-        </ul>
+pre {
+    overflow: auto
+}
 
-        <ul>
-            <li><b>-only AR</b>: Uses AR model exclusively to predict all RVQ tokens (3 semantic + 3 acoustic) through multiple heads</li>
-        </ul>
-                <li>The first 2 to 3 seconds of the ground truth speech are extracted as reference speech, with the precise duration determined by the Voice Activity Detection (VAD) cutoff point. Care is taken to ensure that the extracted segment ends at the completion of a full word pronunciation.</li>
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, monospace;
+    font-size: 1em
+}
 
-                </ul>
-<h3>Sample for Seen Speaker - Development Set</h3>
-<h4>Sample 1</h4>
-<p>Text: 倘若我们将一个人从其所属的文化世界中赶出去。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-dev/002第一章第800个世代_00055_0/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-dev/002第一章第800个世代_00055_0/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/002第一章第800个世代_00055_0/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/002第一章第800个世代_00055_0/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/002第一章第800个世代_00055_0/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/002第一章第800个世代_00055_0/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/002第一章第800个世代_00055_0/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/002第一章第800个世代_00055_0/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/002第一章第800个世代_00055_0/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 2</h4>
-<p>Text: 你要求到沿海挂职,这是积极进步,目的是高尚的。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-dev/县委组织部长第7集打开心结_00009_1/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-dev/县委组织部长第7集打开心结_00009_1/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/县委组织部长第7集打开心结_00009_1/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/县委组织部长第7集打开心结_00009_1/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/县委组织部长第7集打开心结_00009_1/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/县委组织部长第7集打开心结_00009_1/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/县委组织部长第7集打开心结_00009_1/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/县委组织部长第7集打开心结_00009_1/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/县委组织部长第7集打开心结_00009_1/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 3</h4>
-<p>Text: 咱党前流神威雄猛,如砍瓜切菜,杀散众人。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-dev/喻世明言第二十一卷临安里钱婆留发迹4_00058_0/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-dev/喻世明言第二十一卷临安里钱婆留发迹4_00058_0/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/喻世明言第二十一卷临安里钱婆留发迹4_00058_0/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/喻世明言第二十一卷临安里钱婆留发迹4_00058_0/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/喻世明言第二十一卷临安里钱婆留发迹4_00058_0/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/喻世明言第二十一卷临安里钱婆留发迹4_00058_0/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/喻世明言第二十一卷临安里钱婆留发迹4_00058_0/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/喻世明言第二十一卷临安里钱婆留发迹4_00058_0/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/喻世明言第二十一卷临安里钱婆留发迹4_00058_0/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 4</h4>
-<p>Text: 指出,这是以前法利亚长老所掘的那条地道的出口。基督山觉得他的四肢在发抖,他在一段木头上坐了下。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-dev/基督山伯爵第113章往事旧地重游_00066_1/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-dev/基督山伯爵第113章往事旧地重游_00066_1/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/基督山伯爵第113章往事旧地重游_00066_1/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/基督山伯爵第113章往事旧地重游_00066_1/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/基督山伯爵第113章往事旧地重游_00066_1/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/基督山伯爵第113章往事旧地重游_00066_1/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/基督山伯爵第113章往事旧地重游_00066_1/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/基督山伯爵第113章往事旧地重游_00066_1/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/基督山伯爵第113章往事旧地重游_00066_1/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 5</h4>
-<p>Text: 先露出极为远大的战略智慧和战略眼光。当曹策召开会议,他的一些手下并不赞同迎接现地,只有徐玉藤少数人支持他,大家在会议上展开激烈辩论。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-dev/曹操传第043回抢夺天子_00105_0/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-dev/曹操传第043回抢夺天子_00105_0/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/曹操传第043回抢夺天子_00105_0/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/曹操传第043回抢夺天子_00105_0/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/曹操传第043回抢夺天子_00105_0/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/曹操传第043回抢夺天子_00105_0/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/曹操传第043回抢夺天子_00105_0/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/曹操传第043回抢夺天子_00105_0/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/曹操传第043回抢夺天子_00105_0/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 6</h4>
-<p>Text: 正是这样的缘故。当他看到贾宝玉为林黛玉的诗汇夺魁,高兴得首舞祖导时,按耐不住一腔怨恨。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-dev/李劼薛宝钗的生存策略第一哲学家_00114_0/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-dev/李劼薛宝钗的生存策略第一哲学家_00114_0/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/李劼薛宝钗的生存策略第一哲学家_00114_0/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/李劼薛宝钗的生存策略第一哲学家_00114_0/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/李劼薛宝钗的生存策略第一哲学家_00114_0/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/李劼薛宝钗的生存策略第一哲学家_00114_0/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/李劼薛宝钗的生存策略第一哲学家_00114_0/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/李劼薛宝钗的生存策略第一哲学家_00114_0/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/李劼薛宝钗的生存策略第一哲学家_00114_0/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 7</h4>
-<p>Text: 本集故事播讲完毕,请您继续收听。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-dev/牧狼人165_00057_0/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-dev/牧狼人165_00057_0/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/牧狼人165_00057_0/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/牧狼人165_00057_0/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/牧狼人165_00057_0/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/牧狼人165_00057_0/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/牧狼人165_00057_0/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/牧狼人165_00057_0/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/牧狼人165_00057_0/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 8</h4>
-<p>Text: 我就只能寄希望于美军的狙击手死在我军的炮火之下。否则有这家伙防守。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-dev/第四百四十七章光源_00070_0/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-dev/第四百四十七章光源_00070_0/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/第四百四十七章光源_00070_0/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/第四百四十七章光源_00070_0/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/第四百四十七章光源_00070_0/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/第四百四十七章光源_00070_0/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/第四百四十七章光源_00070_0/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/第四百四十七章光源_00070_0/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/第四百四十七章光源_00070_0/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 9</h4>
-<p>Text: 生活只是修道,吃饭。什么时候活得不耐烦了?只要一手两个翘。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-dev/膏肓二窍_00004_0/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-dev/膏肓二窍_00004_0/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/膏肓二窍_00004_0/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/膏肓二窍_00004_0/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/膏肓二窍_00004_0/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/膏肓二窍_00004_0/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/膏肓二窍_00004_0/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/膏肓二窍_00004_0/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/膏肓二窍_00004_0/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 10</h4>
-<p>Text: 但邻居们看到,大多数时间,这个十岁的孩子,一个人默默嗦嗦在院子的简易造房里默不作声地做饭,又一个人默不作声地在屋里待着,到了晚上十点多就关灯睡觉。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-dev/黄金城第64集_00159_0/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-dev/黄金城第64集_00159_0/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/黄金城第64集_00159_0/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/黄金城第64集_00159_0/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/黄金城第64集_00159_0/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/黄金城第64集_00159_0/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/黄金城第64集_00159_0/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/黄金城第64集_00159_0/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-dev/黄金城第64集_00159_0/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
+button,
+input,
+optgroup,
+select,
+textarea {
+    color: inherit;
+    font: inherit;
+    margin: 0
+}
 
-<br>
-<br>
-      <h3>Sample for Unseen Speaker - Test Set</h3>
+button {
+    overflow: visible
+}
 
+button,
+select {
+    text-transform: none
+}
 
-<br><h4>Sample 1</h4>
-<p>Text: 这笔他们即将继承到手的财产,他那种死死抓住财富,不肯放手的方式,也使他们想到这笔钱。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-test/人是怎样死的二法国埃米尔左拉_00084_0/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-test/人是怎样死的二法国埃米尔左拉_00084_0/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/人是怎样死的二法国埃米尔左拉_00084_0/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/人是怎样死的二法国埃米尔左拉_00084_0/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/人是怎样死的二法国埃米尔左拉_00084_0/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/人是怎样死的二法国埃米尔左拉_00084_0/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/人是怎样死的二法国埃米尔左拉_00084_0/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/人是怎样死的二法国埃米尔左拉_00084_0/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/人是怎样死的二法国埃米尔左拉_00084_0/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 2</h4>
-<p>Text: 肖腾尔为你演播的《渡边淳衣大师》临终绝笔。再爱一次。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-test/再爱一次07力不从心四_00001_1/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-test/再爱一次07力不从心四_00001_1/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/再爱一次07力不从心四_00001_1/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/再爱一次07力不从心四_00001_1/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/再爱一次07力不从心四_00001_1/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/再爱一次07力不从心四_00001_1/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/再爱一次07力不从心四_00001_1/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/再爱一次07力不从心四_00001_1/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/再爱一次07力不从心四_00001_1/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 3</h4>
-<p>Text: 因此呢,夏天规定,要煮到烂熟为主。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-test/国宝同仁堂04_00164_0/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-test/国宝同仁堂04_00164_0/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/国宝同仁堂04_00164_0/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/国宝同仁堂04_00164_0/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/国宝同仁堂04_00164_0/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/国宝同仁堂04_00164_0/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/国宝同仁堂04_00164_0/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/国宝同仁堂04_00164_0/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/国宝同仁堂04_00164_0/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 4</h4>
-<p>Text: 但是一千五百人,怎么可能挡住上万的骑兵呢?政绩只得退入了城中。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-test/大写西域148车师前国丝路明珠的破碎剪影2_00049_2/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-test/大写西域148车师前国丝路明珠的破碎剪影2_00049_2/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/大写西域148车师前国丝路明珠的破碎剪影2_00049_2/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/大写西域148车师前国丝路明珠的破碎剪影2_00049_2/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/大写西域148车师前国丝路明珠的破碎剪影2_00049_2/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/大写西域148车师前国丝路明珠的破碎剪影2_00049_2/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/大写西域148车师前国丝路明珠的破碎剪影2_00049_2/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/大写西域148车师前国丝路明珠的破碎剪影2_00049_2/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/大写西域148车师前国丝路明珠的破碎剪影2_00049_2/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 5</h4>
-<p>Text: 太后长天大日讨得没事,便逗着她玩,教她识字读书,讲三国故事给她听。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-test/康熙大帝003敝屣江山乾隆皇帝上线啦_00062_0/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-test/康熙大帝003敝屣江山乾隆皇帝上线啦_00062_0/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/康熙大帝003敝屣江山乾隆皇帝上线啦_00062_0/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/康熙大帝003敝屣江山乾隆皇帝上线啦_00062_0/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/康熙大帝003敝屣江山乾隆皇帝上线啦_00062_0/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/康熙大帝003敝屣江山乾隆皇帝上线啦_00062_0/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/康熙大帝003敝屣江山乾隆皇帝上线啦_00062_0/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/康熙大帝003敝屣江山乾隆皇帝上线啦_00062_0/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/康熙大帝003敝屣江山乾隆皇帝上线啦_00062_0/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 6</h4>
-<p>Text: 这为他能迅速地成为起义领袖奠定了基础。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-test/第十三章卧底_00014_1/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-test/第十三章卧底_00014_1/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/第十三章卧底_00014_1/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/第十三章卧底_00014_1/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/第十三章卧底_00014_1/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/第十三章卧底_00014_1/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/第十三章卧底_00014_1/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/第十三章卧底_00014_1/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/第十三章卧底_00014_1/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 7</h4>
-<p>Text: 在自己家的地面和桌岩留下了擦尸状血迹。最后,他畏罪上吊,自杀了。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-test/罪头条005深山屠杀_00010_2/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-test/罪头条005深山屠杀_00010_2/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/罪头条005深山屠杀_00010_2/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/罪头条005深山屠杀_00010_2/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/罪头条005深山屠杀_00010_2/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/罪头条005深山屠杀_00010_2/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/罪头条005深山屠杀_00010_2/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/罪头条005深山屠杀_00010_2/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/罪头条005深山屠杀_00010_2/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 8</h4>
-<p>Text: 买卖场故意车拉到郊外,自己挖坑给埋了。</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-test/聊斋搞笑秀才奇遇波斯寻宝01_00179_0/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-test/聊斋搞笑秀才奇遇波斯寻宝01_00179_0/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/聊斋搞笑秀才奇遇波斯寻宝01_00179_0/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/聊斋搞笑秀才奇遇波斯寻宝01_00179_0/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/聊斋搞笑秀才奇遇波斯寻宝01_00179_0/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/聊斋搞笑秀才奇遇波斯寻宝01_00179_0/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/聊斋搞笑秀才奇遇波斯寻宝01_00179_0/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/聊斋搞笑秀才奇遇波斯寻宝01_00179_0/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/聊斋搞笑秀才奇遇波斯寻宝01_00179_0/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button;
+    cursor: pointer
+}
 
+button[disabled],
+html input[disabled] {
+    cursor: default
+}
 
-<br>
-<br>
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0
+}
 
-    </section>
+input {
+    line-height: normal
+}
 
-</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
+input[type="checkbox"],
+input[type="radio"] {
+    box-sizing: border-box;
+    padding: 0
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    height: auto
+}
+
+input[type="search"] {
+    -webkit-appearance: textfield;
+    box-sizing: content-box
+}
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none
+}
+
+fieldset {
+    border: 1px solid #c0c0c0;
+    margin: 0 2px;
+    padding: 0.35em 0.625em 0.75em
+}
+
+legend {
+    border: 0;
+    padding: 0
+}
+
+textarea {
+    overflow: auto
+}
+
+optgroup {
+    font-weight: bold
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+td,
+th {
+    padding: 0
+}
+
+.highlight table td {
+    padding: 5px
+}
+
+.highlight table pre {
+    margin: 0
+}
+
+.highlight .cm {
+    color: #999988;
+    font-style: italic
+}
+
+.highlight .cp {
+    color: #999999;
+    font-weight: bold
+}
+
+.highlight .c1 {
+    color: #999988;
+    font-style: italic
+}
+
+.highlight .cs {
+    color: #999999;
+    font-weight: bold;
+    font-style: italic
+}
+
+.highlight .c,
+.highlight .cd {
+    color: #999988;
+    font-style: italic
+}
+
+.highlight .err {
+    color: #a61717;
+    background-color: #e3d2d2
+}
+
+.highlight .gd {
+    color: #000000;
+    background-color: #ffdddd
+}
+
+.highlight .ge {
+    color: #000000;
+    font-style: italic
+}
+
+.highlight .gr {
+    color: #aa0000
+}
+
+.highlight .gh {
+    color: #999999
+}
+
+.highlight .gi {
+    color: #000000;
+    background-color: #ddffdd
+}
+
+.highlight .go {
+    color: #888888
+}
+
+.highlight .gp {
+    color: #555555
+}
+
+.highlight .gs {
+    font-weight: bold
+}
+
+.highlight .gu {
+    color: #aaaaaa
+}
+
+.highlight .gt {
+    color: #aa0000
+}
+
+.highlight .kc {
+    color: #000000;
+    font-weight: bold
+}
+
+.highlight .kd {
+    color: #000000;
+    font-weight: bold
+}
+
+.highlight .kn {
+    color: #000000;
+    font-weight: bold
+}
+
+.highlight .kp {
+    color: #000000;
+    font-weight: bold
+}
+
+.highlight .kr {
+    color: #000000;
+    font-weight: bold
+}
+
+.highlight .kt {
+    color: #445588;
+    font-weight: bold
+}
+
+.highlight .k,
+.highlight .kv {
+    color: #000000;
+    font-weight: bold
+}
+
+.highlight .mf {
+    color: #009999
+}
+
+.highlight .mh {
+    color: #009999
+}
+
+.highlight .il {
+    color: #009999
+}
+
+.highlight .mi {
+    color: #009999
+}
+
+.highlight .mo {
+    color: #009999
+}
+
+.highlight .m,
+.highlight .mb,
+.highlight .mx {
+    color: #009999
+}
+
+.highlight .sb {
+    color: #d14
+}
+
+.highlight .sc {
+    color: #d14
+}
+
+.highlight .sd {
+    color: #d14
+}
+
+.highlight .s2 {
+    color: #d14
+}
+
+.highlight .se {
+    color: #d14
+}
+
+.highlight .sh {
+    color: #d14
+}
+
+.highlight .si {
+    color: #d14
+}
+
+.highlight .sx {
+    color: #d14
+}
+
+.highlight .sr {
+    color: #009926
+}
+
+.highlight .s1 {
+    color: #d14
+}
+
+.highlight .ss {
+    color: #990073
+}
+
+.highlight .s {
+    color: #d14
+}
+
+.highlight .na {
+    color: #008080
+}
+
+.highlight .bp {
+    color: #999999
+}
+
+.highlight .nb {
+    color: #0086B3
+}
+
+.highlight .nc {
+    color: #445588;
+    font-weight: bold
+}
+
+.highlight .no {
+    color: #008080
+}
+
+.highlight .nd {
+    color: #3c5d5d;
+    font-weight: bold
+}
+
+.highlight .ni {
+    color: #800080
+}
+
+.highlight .ne {
+    color: #990000;
+    font-weight: bold
+}
+
+.highlight .nf {
+    color: #990000;
+    font-weight: bold
+}
+
+.highlight .nl {
+    color: #990000;
+    font-weight: bold
+}
+
+.highlight .nn {
+    color: #555555
+}
+
+.highlight .nt {
+    color: #000080
+}
+
+.highlight .vc {
+    color: #008080
+}
+
+.highlight .vg {
+    color: #008080
+}
+
+.highlight .vi {
+    color: #008080
+}
+
+.highlight .nv {
+    color: #008080
+}
+
+.highlight .ow {
+    color: #000000;
+    font-weight: bold
+}
+
+.highlight .o {
+    color: #000000;
+    font-weight: bold
+}
+
+.highlight .w {
+    color: #bbbbbb
+}
+
+.highlight {
+    background-color: #f8f8f8
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #606c71
+}
+
+a {
+    color: #1e6bb8;
+    text-decoration: none
+}
+
+a:hover {
+    text-decoration: underline
+}
+
+.btn {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 0.3rem;
+    transition: color 0.2s, background-color 0.2s, border-color 0.2s
+}
+
+.btn:hover {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3)
+}
+
+.btn+.btn {
+    margin-left: 1rem
+}
+
+@media screen and (min-width: 64em) {
+    .btn {
+        padding: 0.75rem 1rem
+    }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+    .btn {
+        padding: 0.6rem 0.9rem;
+        font-size: 0.9rem
+    }
+}
+
+@media screen and (max-width: 42em) {
+    .btn {
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 0.9rem
+    }
+
+    .btn+.btn {
+        margin-top: 1rem;
+        margin-left: 0
+    }
+}
+
+.page-header {
+    color: #fff;
+    text-align: center;
+    background-color: #159957;
+    background-image: linear-gradient(60deg, #155799, #159957)
+}
+
+@media screen and (min-width: 64em) {
+    .page-header {
+        padding: 5rem 6rem
+    }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+    .page-header {
+        padding: 3rem 4rem
+    }
+}
+
+@media screen and (max-width: 42em) {
+    .page-header {
+        padding: 2rem 1rem
+    }
+}
+
+.project-name {
+    margin-top: 0;
+    margin-bottom: 0.1rem
+}
+
+@media screen and (min-width: 64em) {
+    .project-name {
+        font-size: 3.25rem
+    }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+    .project-name {
+        font-size: 2.25rem
+    }
+}
+
+@media screen and (max-width: 42em) {
+    .project-name {
+        font-size: 1.75rem
+    }
+}
+
+.project-tagline {
+    margin-bottom: 2rem;
+    font-weight: normal;
+    opacity: 0.7
+}
+
+@media screen and (min-width: 64em) {
+    .project-tagline {
+        font-size: 1.25rem
+    }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+    .project-tagline {
+        font-size: 1.15rem
+    }
+}
+
+@media screen and (max-width: 42em) {
+    .project-tagline {
+        font-size: 1rem
+    }
+}
+
+.main-content {
+    word-wrap: break-word
+}
+
+.main-content :first-child {
+    margin-top: 0
+}
+
+@media screen and (min-width: 64em) {
+    .main-content {
+        max-width: 100rem;
+        padding: 2rem 6rem;
+        margin: 0 auto;
+        font-size: 1.1rem
+    }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+    .main-content {
+        padding: 2rem 4rem;
+        font-size: 1.1rem
+    }
+}
+
+@media screen and (max-width: 42em) {
+    .main-content {
+        padding: 2rem 1rem;
+        font-size: 1rem
+    }
+}
+
+.main-content img {
+    max-width: 100%
+}
+
+.main-content h1,
+.main-content h2,
+.main-content h3,
+.main-content h4,
+.main-content h5,
+.main-content h6 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: normal;
+    color: #159957
+}
+
+.main-content p {
+    margin-bottom: 1em
+}
+
+.main-content code {
+    padding: 2px 4px;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 0.9rem;
+    color: #567482;
+    background-color: #f3f6fa;
+    border-radius: 0.3rem
+}
+
+.main-content pre {
+    padding: 0.8rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font: 1rem Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    color: #567482;
+    word-wrap: normal;
+    background-color: #f3f6fa;
+    border: solid 1px #dce6f0;
+    border-radius: 0.3rem
+}
+
+.main-content pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+    color: #567482;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0
+}
+
+.main-content .highlight {
+    margin-bottom: 1rem
+}
+
+.main-content .highlight pre {
+    margin-bottom: 0;
+    word-break: normal
+}
+
+.main-content .highlight pre,
+.main-content pre {
+    padding: 0.8rem;
+    overflow: auto;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    border-radius: 0.3rem;
+    -webkit-overflow-scrolling: touch
+}
+
+.main-content pre code,
+.main-content pre tt {
+    display: inline;
+    max-width: initial;
+    padding: 0;
+    margin: 0;
+    overflow: initial;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0
+}
+
+.main-content pre code:before,
+.main-content pre code:after,
+.main-content pre tt:before,
+.main-content pre tt:after {
+    content: normal
+}
+
+.main-content ul,
+.main-content ol {
+    margin-top: 0
+}
+
+.main-content blockquote {
+    padding: 0 1rem;
+    margin-left: 0;
+    color: #819198;
+    border-left: 0.3rem solid #dce6f0
+}
+
+.main-content blockquote>:first-child {
+    margin-top: 0
+}
+
+.main-content blockquote>:last-child {
+    margin-bottom: 0
+}
+
+.main-content table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    word-break: normal;
+    word-break: keep-all;
+    -webkit-overflow-scrolling: touch
+}
+
+.main-content table th {
+    font-weight: bold
+}
+
+.main-content table th,
+.main-content table td {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e9ebec
+}
+
+.main-content dl {
+    padding: 0
+}
+
+.main-content dl dt {
+    padding: 0;
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: bold
+}
+
+.main-content dl dd {
+    padding: 0;
+    margin-bottom: 1rem
+}
+
+.main-content hr {
+    height: 2px;
+    padding: 0;
+    margin: 1rem 0;
+    background-color: #eff0f1;
+    border: 0
+}
+
+.site-footer {
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: solid 1px #eff0f1
+}
+
+@media screen and (min-width: 64em) {
+    .site-footer {
+        font-size: 1rem
+    }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+    .site-footer {
+        font-size: 1rem
+    }
+}
+
+@media screen and (max-width: 42em) {
+    .site-footer {
+        font-size: 0.9rem
+    }
+}
+
+.site-footer-owner {
+    display: block;
+    font-weight: bold
+}
+
+.site-footer-credits {
+    color: #819198
+}
