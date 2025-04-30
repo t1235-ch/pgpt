@@ -32,7 +32,7 @@
 
 <h2 id="abstract">Abstract</h2>
 <p>
-Advances in speech representation and large language models have enhanced zero-shot text-to-speech (TTS) performance. However, existing zero-shot TTS models face challenges in capturing the complex correlations between acoustic and semantic features, resulting in a lack of expressiveness and similarity. The primary reason lies in the complex relationship between semantic and acoustic features, which manifests independent and interdependent aspects. This paper introduces a TTS framework that combines both autoregressive (AR) and non-autoregressive (NAR) modules to harmonize the independence and interdependence of acoustic and semantic information. The AR model leverages the proposed Parallel Tokenizer to synthesize top semantic and acoustic tokens simultaneously. In contrast, the Coupled NAR model predicts detailed tokens based on the AR output, considering the interdependence between semantic and acoustic aspects. Parallel GPT, built on this architecture, is designed to improve zero-shot text-to-speech synthesis through its parallel structure.
+Advances in speech representation and large language models have enhanced zero-shot text-to-speech (TTS) performance. However, existing zero-shot TTS models face challenges in capturing the complex correlations between acoustic and semantic features, resulting in a lack of expressiveness and similarity. The primary reason lies in the complex relationship between semantic and acoustic features, which manifests independent and interdependent aspects. This paper introduces a TTS framework that combines both autoregressive (AR) and non-autoregressive (NAR) modules to harmonize the independence and interdependence of acoustic and semantic information. The AR model leverages the proposed Parallel Tokenizer to synthesize the top semantic and acoustic tokens simultaneously. In contrast, the Coupled NAR model predicts detailed tokens based on the AR output, considering the interdependence between semantic and acoustic aspects. Parallel GPT, built on this architecture, is designed to improve zero-shot text-to-speech synthesis through its parallel structure.
 Experiments on English and Chinese datasets demonstrate that the proposed model significantly outperforms the quality and efficiency of the synthesis of existing zero-shot TTS models.
 </p>
 
@@ -87,10 +87,11 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
 
         <br />
   <p style="text-align: center">
-    <img src="parallel-gpt_5_00.jpg" />
+    <img src="parallel-gpt_5_00.jpg" style="width: 60%; max-width: 600px; />
   </p>
   <p>
   <figcaption style="text-align:center;">
+      <br>
     </font>
     <font size=3>
       Figure 4: The structure of Coupled Non-Autoregressive Transformer. It is designed to generate detailed tokens from target top tokens and reference speech.
@@ -126,10 +127,11 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
         <ul>
             <li><b>-only AR</b>: Uses AR model exclusively to predict all RVQ tokens (3 semantic + 3 acoustic) through multiple heads</li>
         </ul>
+        <li>The first 2 to 3 seconds of the ground truth speech are extracted as reference speech, with the precise duration determined by the Voice Activity Detection (VAD) cutoff point. Care is taken to ensure that the extracted segment ends at the completion of a full word pronunciation.</li>
                 </ul>
 <h3>Sample for Seen Speaker - Development Set</h3>
 <h4>Sample 1</h4>
-<p>Text: And then he talked of her mother, and he made her pray.,</b></p>
+<p>Text: And then he talked of her mother, and he made her pray</b></p>
 <table>
   <thead>
     <tr>
@@ -166,7 +168,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 2</h4>
-<p>Text: He had stolen out during the half hour allowed at the works for tea, to buy them an orange or two, which now puffed out his jacket pocket.,</b></p>
+<p>Text: He had stolen out during the half hour allowed at the works for tea, to buy them an orange or two, which now puffed out his jacket pocket</b></p>
 <table>
   <thead>
     <tr>
@@ -202,82 +204,9 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
             <td style="text-align: left"><audio src="demo/libri-dev/1993_147149_000034_000004/5.wav" controls="" preload=""></audio></td>
   </tbody>
 </table>
+
 <br><h4>Sample 3</h4>
-<p>Text: I was walking backward, in a crouching position, when I heard Antonia scream.,</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-dev/2035_147960_000005_000002/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-dev/2035_147960_000005_000002/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-dev/2035_147960_000005_000002/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2035_147960_000005_000002/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2035_147960_000005_000002/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2035_147960_000005_000002/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2035_147960_000005_000002/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2035_147960_000005_000002/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2035_147960_000005_000002/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2035_147960_000005_000002/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2035_147960_000005_000002/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2035_147960_000005_000002/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2035_147960_000005_000002/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 4</h4>
-<p>Text: The Author wishes it to be understood that Erewhon is pronounced as a word of three syllables, all short-thus, E re whon.,</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-dev/2412_153947_000014_000000/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-dev/2412_153947_000014_000000/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-dev/2412_153947_000014_000000/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2412_153947_000014_000000/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2412_153947_000014_000000/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2412_153947_000014_000000/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2412_153947_000014_000000/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2412_153947_000014_000000/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2412_153947_000014_000000/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2412_153947_000014_000000/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2412_153947_000014_000000/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2412_153947_000014_000000/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2412_153947_000014_000000/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 5</h4>
-<p>Text: "Tom, we're having a problem with the gyro stabilizer," said Mark Faber, gray haired president of the Faber Electronics Company.,</b></p>
+<p>Text: "Tom, we're having a problem with the gyro stabilizer," said Mark Faber, gray haired president of the Faber Electronics Company</b></p>
 <table>
   <thead>
     <tr>
@@ -313,119 +242,9 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
             <td style="text-align: left"><audio src="demo/libri-dev/251_137823_000002_000000/5.wav" controls="" preload=""></audio></td>
   </tbody>
 </table>
-<br><h4>Sample 6</h4>
-<p>Text: It is really a great comfort to a statesman that the masses are so well aware that they deserve hanging, and therefore so careful to prevent any danger of public justice depopulating the province.,</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-dev/2902_9008_000024_000002/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-dev/2902_9008_000024_000002/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-dev/2902_9008_000024_000002/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2902_9008_000024_000002/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2902_9008_000024_000002/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2902_9008_000024_000002/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2902_9008_000024_000002/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2902_9008_000024_000002/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2902_9008_000024_000002/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2902_9008_000024_000002/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2902_9008_000024_000002/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2902_9008_000024_000002/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/2902_9008_000024_000002/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 7</h4>
-<p>Text: The paternal parent has a right to his infants, no doubt. " That was Bozzle's law.,</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-dev/3536_8226_000013_000002/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-dev/3536_8226_000013_000002/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-dev/3536_8226_000013_000002/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/3536_8226_000013_000002/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/3536_8226_000013_000002/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/3536_8226_000013_000002/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/3536_8226_000013_000002/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/3536_8226_000013_000002/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/3536_8226_000013_000002/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/3536_8226_000013_000002/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/3536_8226_000013_000002/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/3536_8226_000013_000002/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/3536_8226_000013_000002/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 8</h4>
-<p>Text: The outward signs of mourning for the dead are far more spontaneous and convincing than is the correct and well ordered black of civilization. Both men and women among us loosen their hair and cut it according to the degree of relationship or of devotion.,</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-dev/5536_43363_000004_000000/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-dev/5536_43363_000004_000000/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-dev/5536_43363_000004_000000/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/5536_43363_000004_000000/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/5536_43363_000004_000000/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/5536_43363_000004_000000/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/5536_43363_000004_000000/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/5536_43363_000004_000000/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/5536_43363_000004_000000/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/5536_43363_000004_000000/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/5536_43363_000004_000000/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/5536_43363_000004_000000/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-dev/5536_43363_000004_000000/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 9</h4>
-<p>Text: And Mr Ossipon brings every week a pile of these f p tracts to sell at a halfpenny each.,</b></p>
+
+<br><h4>Sample 4</h4>
+<p>Text: And Mr Ossipon brings every week a pile of these f p tracts to sell at a halfpenny each</b></p>
 <table>
   <thead>
     <tr>
@@ -461,8 +280,8 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
             <td style="text-align: left"><audio src="demo/libri-dev/777_126732_000076_000004/5.wav" controls="" preload=""></audio></td>
   </tbody>
 </table>
-<br><h4>Sample 10</h4>
-<p>Text: This alternative in the Captain's plans (terminating the voyage a month earlier than his arrangements had contemplated) puzzled Randal.,</b></p>
+<br><h4>Sample 5</h4>
+<p>Text: This alternative in the Captain's plans (terminating the voyage a month earlier than his arrangements had contemplated) puzzled Randal</b></p>
 <table>
   <thead>
     <tr>
@@ -506,7 +325,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
       <h3>Sample for Unseen Speaker - Test Set</h3>
 
 <h4>Sample 1</h4>
-<p>Text: So choose for yourself-to make a rush or tarry here. "So choose for yourself-to make a rush or tarry here. ".,</b></p>
+<p>Text: So choose for yourself-to make a rush or tarry here. "So choose for yourself-to make a rush or tarry here. "</b></p>
 <table>
   <thead>
     <tr>
@@ -543,7 +362,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 2</h4>
-<p>Text: They met a good many acquaintances; Mainhall, indeed, knew almost every one, and he babbled on incontinently, screwing his small head about over his high collar.,</b></p>
+<p>Text: They met a good many acquaintances; Mainhall, indeed, knew almost every one, and he babbled on incontinently, screwing his small head about over his high collar</b></p>
 <table>
   <thead>
     <tr>
@@ -580,7 +399,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 3</h4>
-<p>Text: "Nothing whatever," replied the courtier, as pale as death; "but your majesty has not thought of Fruits. ""Nothing whatever," replied the courtier, as pale as death; "but your majesty has not thought of Fruits. ".,</b></p>
+<p>Text: "Nothing whatever," replied the courtier, as pale as death; "but your majesty has not thought of Fruits. ""Nothing whatever," replied the courtier, as pale as death; "but your majesty has not thought of Fruits. "</b></p>
 <table>
   <thead>
     <tr>
@@ -617,7 +436,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 4</h4>
-<p>Text: The Missouri cabal, on the other hand, having three of their best men constantly at the Governor's side, were compelled to recognize their lack of justification.,</b></p>
+<p>Text: The Missouri cabal, on the other hand, having three of their best men constantly at the Governor's side, were compelled to recognize their lack of justification</b></p>
 <table>
   <thead>
     <tr>
@@ -654,7 +473,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 5</h4>
-<p>Text: Yet were they little worse than what were insisted on before the battle of Naseby.,</b></p>
+<p>Text: Yet were they little worse than what were insisted on before the battle of Naseby</b></p>
 <table>
   <thead>
     <tr>
@@ -690,82 +509,9 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
             <td style="text-align: left"><audio src="demo/libri-test/8224_274384_000017_000002/5.wav" controls="" preload=""></audio></td>
   </tbody>
 </table>
+
 <br><h4>Sample 6</h4>
-<p>Text: "First, bind the Earth Man in the frame," commanded the Boolooroo. "We'll slice him in two before we do the same to the billygoat. ""First, bind the Earth Man in the frame," commanded the Boolooroo. ".,</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-test/8555_284447_000043_000000/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-test/8555_284447_000043_000000/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-test/8555_284447_000043_000000/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284447_000043_000000/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284447_000043_000000/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284447_000043_000000/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284447_000043_000000/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284447_000043_000000/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284447_000043_000000/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284447_000043_000000/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284447_000043_000000/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284447_000043_000000/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284447_000043_000000/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 7</h4>
-<p>Text: "I escaped from the City because the Boolooroo tried to patch me, as you all know, and the Six Snubnosed Princesses tried to marry me, which would have been a far greater misfortune.,</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>YourTTS</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-            <th style="text-align: center"><strong>VALL-E</strong></th>
-                  <th style="text-align: center"><strong>TransferTTS</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-            <th style="text-align: center"><strong>UniAudio</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/libri-test/8555_284449_000021_000000/9.wav" controls="" preload=""></audio></td>
-   <td style="text-align: left"><audio src="demo/libri-test/8555_284449_000021_000000/3.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/libri-test/8555_284449_000021_000000/13.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284449_000021_000000/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284449_000021_000000/10.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284449_000021_000000/11.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284449_000021_000000/12.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284449_000021_000000/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284449_000021_000000/8.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284449_000021_000000/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284449_000021_000000/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284449_000021_000000/4.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/libri-test/8555_284449_000021_000000/5.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 8</h4>
-<p>Text: A ring of amethyst I could not wear here, plainer to my sight, Than that first kiss.,</b></p>
+<p>Text: A ring of amethyst I could not wear here, plainer to my sight, Than that first kiss</b></p>
 <table>
   <thead>
     <tr>
@@ -831,10 +577,12 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
         <ul>
             <li><b>-only AR</b>: Uses AR model exclusively to predict all RVQ tokens (3 semantic + 3 acoustic) through multiple heads</li>
         </ul>
+                <li>The first 2 to 3 seconds of the ground truth speech are extracted as reference speech, with the precise duration determined by the Voice Activity Detection (VAD) cutoff point. Care is taken to ensure that the extracted segment ends at the completion of a full word pronunciation.</li>
+
                 </ul>
 <h3>Sample for Seen Speaker - Development Set</h3>
 <h4>Sample 1</h4>
-<p>Text: 倘若我们将一个人从其所属的文化世界中赶出去。.,</b></p>
+<p>Text: 倘若我们将一个人从其所属的文化世界中赶出去。</b></p>
 <table>
   <thead>
     <tr>
@@ -863,7 +611,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 2</h4>
-<p>Text: 你要求到沿海挂职,这是积极进步,目的是高尚的。.,</b></p>
+<p>Text: 你要求到沿海挂职,这是积极进步,目的是高尚的。</b></p>
 <table>
   <thead>
     <tr>
@@ -892,7 +640,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 3</h4>
-<p>Text: 咱党前流神威雄猛,如砍瓜切菜,杀散众人。.,</b></p>
+<p>Text: 咱党前流神威雄猛,如砍瓜切菜,杀散众人。</b></p>
 <table>
   <thead>
     <tr>
@@ -921,7 +669,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 4</h4>
-<p>Text: 指出,这是以前法利亚长老所掘的那条地道的出口。基督山觉得他的四肢在发抖,他在一段木头上坐了下。.,</b></p>
+<p>Text: 指出,这是以前法利亚长老所掘的那条地道的出口。基督山觉得他的四肢在发抖,他在一段木头上坐了下。</b></p>
 <table>
   <thead>
     <tr>
@@ -950,7 +698,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 5</h4>
-<p>Text: 先露出极为远大的战略智慧和战略眼光。当曹策召开会议,他的一些手下并不赞同迎接现地,只有徐玉藤少数人支持他,大家在会议上展开激烈辩论。.,</b></p>
+<p>Text: 先露出极为远大的战略智慧和战略眼光。当曹策召开会议,他的一些手下并不赞同迎接现地,只有徐玉藤少数人支持他,大家在会议上展开激烈辩论。</b></p>
 <table>
   <thead>
     <tr>
@@ -979,7 +727,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 6</h4>
-<p>Text: 正是这样的缘故。当他看到贾宝玉为林黛玉的诗汇夺魁,高兴得首舞祖导时,按耐不住一腔怨恨。.,</b></p>
+<p>Text: 正是这样的缘故。当他看到贾宝玉为林黛玉的诗汇夺魁,高兴得首舞祖导时,按耐不住一腔怨恨。</b></p>
 <table>
   <thead>
     <tr>
@@ -1008,7 +756,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 7</h4>
-<p>Text: 本集故事播讲完毕,请您继续收听。.,</b></p>
+<p>Text: 本集故事播讲完毕,请您继续收听。</b></p>
 <table>
   <thead>
     <tr>
@@ -1037,7 +785,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 8</h4>
-<p>Text: 我就只能寄希望于美军的狙击手死在我军的炮火之下。否则有这家伙防守。.,</b></p>
+<p>Text: 我就只能寄希望于美军的狙击手死在我军的炮火之下。否则有这家伙防守。</b></p>
 <table>
   <thead>
     <tr>
@@ -1066,7 +814,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 9</h4>
-<p>Text: 生活只是修道,吃饭。什么时候活得不耐烦了?只要一手两个翘。.,</b></p>
+<p>Text: 生活只是修道,吃饭。什么时候活得不耐烦了?只要一手两个翘。</b></p>
 <table>
   <thead>
     <tr>
@@ -1095,7 +843,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
   </tbody>
 </table>
 <br><h4>Sample 10</h4>
-<p>Text: 但邻居们看到,大多数时间,这个十岁的孩子,一个人默默嗦嗦在院子的简易造房里默不作声地做饭,又一个人默不作声地在屋里待着,到了晚上十点多就关灯睡觉。.,</b></p>
+<p>Text: 但邻居们看到,大多数时间,这个十岁的孩子,一个人默默嗦嗦在院子的简易造房里默不作声地做饭,又一个人默不作声地在屋里待着,到了晚上十点多就关灯睡觉。</b></p>
 <table>
   <thead>
     <tr>
@@ -1128,66 +876,9 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
 <br>
       <h3>Sample for Unseen Speaker - Test Set</h3>
 
-<h4>Sample 1</h4>
-<p>Text: 这个就是典型的圣母行为,拒绝理性,只关心自己心里舒不舒服。.,</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-test/20150825行善与理性陈湛_00027_0/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-test/20150825行善与理性陈湛_00027_0/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/20150825行善与理性陈湛_00027_0/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/20150825行善与理性陈湛_00027_0/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/20150825行善与理性陈湛_00027_0/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/20150825行善与理性陈湛_00027_0/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/20150825行善与理性陈湛_00027_0/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/20150825行善与理性陈湛_00027_0/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/20150825行善与理性陈湛_00027_0/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 2</h4>
-<p>Text: 自己当时根本就没有发怒或反抗的资本。.,</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-test/58素书怒而无威者犯_00021_2/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-test/58素书怒而无威者犯_00021_2/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/58素书怒而无威者犯_00021_2/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/58素书怒而无威者犯_00021_2/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/58素书怒而无威者犯_00021_2/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/58素书怒而无威者犯_00021_2/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/58素书怒而无威者犯_00021_2/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/58素书怒而无威者犯_00021_2/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/58素书怒而无威者犯_00021_2/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br><h4>Sample 3</h4>
-<p>Text: 这笔他们即将继承到手的财产,他那种死死抓住财富,不肯放手的方式,也使他们想到这笔钱。.,</b></p>
+
+<br><h4>Sample 1</h4>
+<p>Text: 这笔他们即将继承到手的财产,他那种死死抓住财富,不肯放手的方式,也使他们想到这笔钱。</b></p>
 <table>
   <thead>
     <tr>
@@ -1215,8 +906,8 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
             <td style="text-align: left"><audio src="demo/xmly-test/人是怎样死的二法国埃米尔左拉_00084_0/8.wav" controls="" preload=""></audio></td>
   </tbody>
 </table>
-<br><h4>Sample 4</h4>
-<p>Text: 肖腾尔为你演播的《渡边淳衣大师》临终绝笔。再爱一次。.,</b></p>
+<br><h4>Sample 2</h4>
+<p>Text: 肖腾尔为你演播的《渡边淳衣大师》临终绝笔。再爱一次。</b></p>
 <table>
   <thead>
     <tr>
@@ -1244,8 +935,8 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
             <td style="text-align: left"><audio src="demo/xmly-test/再爱一次07力不从心四_00001_1/8.wav" controls="" preload=""></audio></td>
   </tbody>
 </table>
-<br><h4>Sample 5</h4>
-<p>Text: 因此呢,夏天规定,要煮到烂熟为主。.,</b></p>
+<br><h4>Sample 3</h4>
+<p>Text: 因此呢,夏天规定,要煮到烂熟为主。</b></p>
 <table>
   <thead>
     <tr>
@@ -1273,8 +964,8 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
             <td style="text-align: left"><audio src="demo/xmly-test/国宝同仁堂04_00164_0/8.wav" controls="" preload=""></audio></td>
   </tbody>
 </table>
-<br><h4>Sample 6</h4>
-<p>Text: 但是一千五百人,怎么可能挡住上万的骑兵呢?政绩只得退入了城中。.,</b></p>
+<br><h4>Sample 4</h4>
+<p>Text: 但是一千五百人,怎么可能挡住上万的骑兵呢?政绩只得退入了城中。</b></p>
 <table>
   <thead>
     <tr>
@@ -1302,8 +993,8 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
             <td style="text-align: left"><audio src="demo/xmly-test/大写西域148车师前国丝路明珠的破碎剪影2_00049_2/8.wav" controls="" preload=""></audio></td>
   </tbody>
 </table>
-<br><h4>Sample 7</h4>
-<p>Text: 太后长天大日讨得没事,便逗着她玩,教她识字读书,讲三国故事给她听。.,</b></p>
+<br><h4>Sample 5</h4>
+<p>Text: 太后长天大日讨得没事,便逗着她玩,教她识字读书,讲三国故事给她听。</b></p>
 <table>
   <thead>
     <tr>
@@ -1331,8 +1022,8 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
             <td style="text-align: left"><audio src="demo/xmly-test/康熙大帝003敝屣江山乾隆皇帝上线啦_00062_0/8.wav" controls="" preload=""></audio></td>
   </tbody>
 </table>
-<br><h4>Sample 8</h4>
-<p>Text: 这为他能迅速地成为起义领袖奠定了基础。.,</b></p>
+<br><h4>Sample 6</h4>
+<p>Text: 这为他能迅速地成为起义领袖奠定了基础。</b></p>
 <table>
   <thead>
     <tr>
@@ -1360,8 +1051,8 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
             <td style="text-align: left"><audio src="demo/xmly-test/第十三章卧底_00014_1/8.wav" controls="" preload=""></audio></td>
   </tbody>
 </table>
-<br><h4>Sample 9</h4>
-<p>Text: 在自己家的地面和桌岩留下了擦尸状血迹。最后,他畏罪上吊,自杀了。.,</b></p>
+<br><h4>Sample 7</h4>
+<p>Text: 在自己家的地面和桌岩留下了擦尸状血迹。最后,他畏罪上吊,自杀了。</b></p>
 <table>
   <thead>
     <tr>
@@ -1389,8 +1080,8 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
             <td style="text-align: left"><audio src="demo/xmly-test/罪头条005深山屠杀_00010_2/8.wav" controls="" preload=""></audio></td>
   </tbody>
 </table>
-<br><h4>Sample 10</h4>
-<p>Text: 买卖场故意车拉到郊外,自己挖坑给埋了。.,</b></p>
+<br><h4>Sample 8</h4>
+<p>Text: 买卖场故意车拉到郊外,自己挖坑给埋了。</b></p>
 <table>
   <thead>
     <tr>
@@ -1418,36 +1109,7 @@ The Coupled Non-Autoregressive Transformer model generates the semantic and acou
             <td style="text-align: left"><audio src="demo/xmly-test/聊斋搞笑秀才奇遇波斯寻宝01_00179_0/8.wav" controls="" preload=""></audio></td>
   </tbody>
 </table>
-<br><h4>Sample 11</h4>
-<p>Text: 在一个潮湿的傍晚,孙光平从家中的后窗看到了正在洗衣服的樱花。.,</b></p>
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: center"><strong>Groundtruth</strong></th>
-      <th style="text-align: center"><strong>MaskGCT</strong></th>
-      <th style="text-align: center"><strong>CosyVoice</strong></th>
-                  <th style="text-align: center"><strong>E2TTS</strong></th>
-      <th style="text-align: center"><strong>Parallel GPT</strong></th>
-                  <th style="text-align: center"><strong>-only Wav2Vec 2.0</strong></th>
-      <th style="text-align: center"><strong>-only BEATs</strong></th>
-                  <th style="text-align: center"><strong>-w/o parallel</strong></th>
-            <th style="text-align: center"><strong>-only AR</strong></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left"><audio src="demo/xmly-test/骆驼在细雨中呼喊010死去四_00057_1/4.wav" controls="" preload=""></audio></td>
-      <td style="text-align: left"><audio src="demo/xmly-test/骆驼在细雨中呼喊010死去四_00057_1/9.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/骆驼在细雨中呼喊010死去四_00057_1/6.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/骆驼在细雨中呼喊010死去四_00057_1/7.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/骆驼在细雨中呼喊010死去四_00057_1/5.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/骆驼在细雨中呼喊010死去四_00057_1/3.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/骆驼在细雨中呼喊010死去四_00057_1/1.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/骆驼在细雨中呼喊010死去四_00057_1/2.wav" controls="" preload=""></audio></td>
-            <td style="text-align: left"><audio src="demo/xmly-test/骆驼在细雨中呼喊010死去四_00057_1/8.wav" controls="" preload=""></audio></td>
-  </tbody>
-</table>
-<br>
+
 
 <br>
 <br>
